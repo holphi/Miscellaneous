@@ -1,3 +1,13 @@
+'''
+
+@Author:    Alex LI
+
+@History:
+2016/07/31  First draft of business logic
+2016/08/08  Add comments to instance methods of the task manager
+
+'''
+
 class Task:
     def __init__(self, id, title, description):
         self.id = id.strip('\n')
@@ -5,11 +15,36 @@ class Task:
         self.description = description.strip('\n')
 
 class TaskManager:
-    
+
+    #Constructor
     def __init__(self):
         print 'Task mamager initialized...'
         self.__taskfile = './data/tasks.dat'
-        
+
+    def __removeTasksFile(self):
+        try:
+            import os
+            if os.path.exists(self.__taskfile):
+                os.remove(self.__taskfile)
+        except Exception, e:
+            raise e
+    
+    def __writeTasksToFile(self, task_lst):
+        try:
+            if task_lst is None:
+                return 0
+            tasks_data = []
+            for task in task_lst:
+                tasks_data.append('%s:%s:%s\n' % (task.id, task.title, task.description))
+            fh = open(self.__taskfile, 'w')
+            fh.writelines(tasks_data)
+            return 1
+        except Exception, e:
+            raise e
+        finally:
+            fh.close()
+
+    #Pass Task ID and return task instance to the caller    
     def getTask(self, id):
         try:
             fh = open(self.__taskfile, 'r')
@@ -23,7 +58,8 @@ class TaskManager:
             raise e
         finally:
             fh.close()
-    
+
+    #Return the list containing all tasks instance
     def getTasks(self):
         try:
             tasks = []
@@ -55,29 +91,7 @@ class TaskManager:
         except Exception, e:
             raise e
 
-    def __removeTasksFile(self):
-        try:
-            import os
-            if os.path.exists(self.__taskfile):
-                os.remove(self.__taskfile)
-        except Exception, e:
-            raise e
-    
-    def __writeTasksToFile(self, task_lst):
-        try:
-            if task_lst is None:
-                return 0
-            tasks_data = []
-            for task in task_lst:
-                tasks_data.append('%s:%s:%s\n' % (task.id, task.title, task.description))
-            fh = open(self.__taskfile, 'w')
-            fh.writelines(tasks_data)
-            return 1
-        except Exception, e:
-            raise e
-        finally:
-            fh.close()
-    
+    #Add a new task by passing the task id, title & description, returing 0 means failure, returning 1 means success
     def addTask(self, id, title, description):
         try:
             if self.getTask(id) is not None:
@@ -92,6 +106,7 @@ class TaskManager:
         except Exception, ex:
             raise ex
 
+    #Delete the task by passing the task id, returing 0 means failure, returing 1 means success
     def deleteTask(self, id):
         try:
             task_lst = self.getTasks()
@@ -104,7 +119,7 @@ class TaskManager:
                     break
                 else:
                     i+=1
-                        # Remvoe original tasks file
+            # Remvoe original tasks file
             if tasks_updated==True:
                 self.__removeTasksFile()
                 # Persist updated tasks to file
