@@ -1,15 +1,15 @@
 '''
-
 @Author:	Alex LI
 
 @History:
 2016/08/07	First Draft. Implement Restful server.
+2016/08/08  Add routes to update tasks & delete tasks.
 
 '''
 
 import sys, os, re
 from collections import OrderedDict
-from bottle import route, run, template, error, get, post, put, request
+from bottle import route, run, template, error, get, post, put, delete, request
 from business import Task, TaskManager
 
 task_mgr = TaskManager()
@@ -56,6 +56,23 @@ def addTask():
         data = request.json
         status_code = task_mgr.addTask(data.get('id'), data.get('title'), data.get('description'))
         return {'status': status_code, 'result': 'New task has been created.' if status_code==1 else 'Insertion failure. The task id might be duplicated.'}
+    except Exception, ex:
+        return {'exception': ex}
+
+@delete('/ToDo/Tasks/<task_id>')
+def deleteTask(task_id):
+    try:
+        status_code = task_mgr.deleteTask(task_id)
+        return {'status': status_code, 'result': 'The task has been removed.' if status_code==1 else 'Operation failure. Invalid Task ID might be provided.'}
+    except Exception, ex:
+        return {'exception', ex}
+
+@put('/ToDo/Tasks/<task_id>')
+def updateTask(task_id):
+    try:
+        data = request.json
+        status_code = task_mgr.updateTask(task_id, data.get('title'), data.get('description'))
+        return {'status': status_code, 'result': 'The task has been updated.' if status_code==1 else 'Update operation failure. Invalid Task ID might be provided.'}
     except Exception, ex:
         return {'exception': ex}
 
