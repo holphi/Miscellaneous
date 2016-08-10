@@ -1,5 +1,2 @@
-����ҵ��ʱ��д��һ��Excel����������ܹ����ɱ�Testlinkʶ���XML�ĵ��⣬
+利用业余时间写的一个Excel插件，除了能够生成被Testlink识别的XML文档外，该插件可帮助Tester检查当前有多少需求被覆盖，已经当前Test Case覆盖了 哪些需求，Test case的覆盖率和自动化率，其检查结果会以报表的方式显示在Excel中。
 
-�ò���ɰ���Tester��鵱ǰ�ж������󱻸��ǣ��Ѿ���ǰ��Test case������
-
-��Щ����Test case�ĸ����ʺ��Զ����ʡ�
