@@ -30,6 +30,7 @@ class TaskManager:
             raise e
     
     def __writeTasksToFile(self, task_lst):
+        fh = None
         try:
             if task_lst is None:
                 return 0
@@ -42,10 +43,12 @@ class TaskManager:
         except Exception, e:
             raise e
         finally:
-            fh.close()
+            if fh is not None:
+                fh.close()
 
     #Pass Task ID and return task instance to the caller    
     def getTask(self, id):
+        fh = None
         try:
             fh = open(self.__taskfile, 'r')
             for data_line in fh.readlines():
@@ -57,10 +60,12 @@ class TaskManager:
         except Exception, e:
             raise e
         finally:
-            fh.close()
+            if fh is not None:
+                fh.close()
 
     #Return the list containing all tasks instance
     def getTasks(self):
+        fh = None
         try:
             tasks = []
             fh = open(self.__taskfile, 'r')
@@ -69,9 +74,11 @@ class TaskManager:
                 tasks.append(Task(task_info[0], task_info[1], task_info[2]))
             return tasks
         except Exception, e:
+            print 'Fucking shit happens here!!!!!!!' + str(e)
             raise e
         finally:
-            fh.close()
+            if fh is not None:
+                fh.close()
 
     #Update task instance, 0: failure, 1: success
     def updateTask(self, id, title, description):
@@ -91,7 +98,7 @@ class TaskManager:
         except Exception, e:
             raise e
 
-    #Add a new task by passing the task id, title & description, returing 0 means failure, returning 1 means success
+    #Add a new task by passing the task id, title & description, returning 0 means failure, returning 1 means success
     def addTask(self, id, title, description):
         try:
             if self.getTask(id) is not None:
@@ -106,7 +113,7 @@ class TaskManager:
         except Exception, ex:
             raise ex
 
-    #Delete the task by passing the task id, returing 0 means failure, returing 1 means success
+    #Delete the task by passing the task id, returning 0 means failure, returning 1 means success
     def deleteTask(self, id):
         try:
             task_lst = self.getTasks()

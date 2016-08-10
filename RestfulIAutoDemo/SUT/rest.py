@@ -4,10 +4,11 @@
 @History:
 2016/08/07	First Draft. Implement Restful server.
 2016/08/08  Add routes to update tasks & delete tasks.
+2016/08/09  Fix unicode-encoding issue in addTaskMethod, use json.loads to convert json object to dict type
 
 '''
 
-import sys, os, re
+import sys, os, re, json
 from collections import OrderedDict
 from bottle import route, run, template, error, get, post, put, delete, request
 from business import Task, TaskManager
@@ -18,7 +19,7 @@ task_mgr = TaskManager()
 def index():
     return 'Restful server is up!'
 
-@get('/ToDo/Tasks/<task_id>')
+@get('/ToDo/Tasks/<task_id>/')
 def getTask(task_id):
     try:
         task = task_mgr.getTask(task_id)
@@ -53,13 +54,14 @@ def getTasks():
 @post('/ToDo/Tasks/')
 def addTask():
     try:
-        data = request.json
-        status_code = task_mgr.addTask(data.get('id'), data.get('title'), data.get('description'))
+        data = json.loads(request.json)
+        #Add function str to convert the coding to ANSI if the coding is UTF-8
+        status_code = task_mgr.addTask(str(data['id']), str(data['title']), str(data['description']))
         return {'status': status_code, 'result': 'New task has been created.' if status_code==1 else 'Insertion failure. The task id might be duplicated.'}
     except Exception, ex:
         return {'exception': ex}
 
-@delete('/ToDo/Tasks/<task_id>')
+@delete('/ToDo/Tasks/<task_id>/')
 def deleteTask(task_id):
     try:
         status_code = task_mgr.deleteTask(task_id)
@@ -67,11 +69,11 @@ def deleteTask(task_id):
     except Exception, ex:
         return {'exception', ex}
 
-@put('/ToDo/Tasks/<task_id>')
+@put('/ToDo/Tasks/<task_id>/')
 def updateTask(task_id):
     try:
-        data = request.json
-        status_code = task_mgr.updateTask(task_id, data.get('title'), data.get('description'))
+        data = json.loads(request.json)
+        status_code = task_mgr.updateTask(task_id, str(data['title']), str(data['description']))
         return {'status': status_code, 'result': 'The task has been updated.' if status_code==1 else 'Update operation failure. Invalid Task ID might be provided.'}
     except Exception, ex:
         return {'exception': ex}
