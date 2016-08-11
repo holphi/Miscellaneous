@@ -1,5 +1,13 @@
-ÀûÓÃÒµÓàÊ±¼äĞ´µÄÒ»¸öExcel²å¼ş£¬³ıÁËÄÜ¹»Éú³É±»TestlinkÊ¶±ğµÄXMLÎÄµµÍâ£¬
+è¯´æ˜ï¼š
 
-¸Ã²å¼ş¿É°ïÖúTester¼ì²éµ±Ç°ÓĞ¶àÉÙĞèÇó±»¸²¸Ç£¬ÒÑ¾­µ±Ç°µÄTest case¸²¸ÇÁË
+åˆ©ç”¨ä¸šä½™æ—¶é—´å†™çš„ä¸€ä¸ªExcelæ’ä»¶ï¼Œé™¤äº†èƒ½å¤Ÿç”Ÿæˆè¢«Testlinkè¯†åˆ«çš„XMLæ–‡æ¡£å¤–ï¼Œè¯¥æ’ä»¶å¯å¸®åŠ©Testeræ£€æŸ¥å½“å‰æœ‰å¤šå°‘éœ€æ±‚è¢«è¦†ç›–ï¼Œå·²ç»å½“å‰Test Caseè¦†ç›–äº†
+å“ªäº›éœ€æ±‚ï¼ŒTest caseçš„è¦†ç›–ç‡å’Œè‡ªåŠ¨åŒ–ç‡ï¼Œå…¶æ£€æŸ¥ç»“æœä¼šä»¥æŠ¥è¡¨çš„æ–¹å¼æ˜¾ç¤ºåœ¨Excelä¸­ã€‚ç›®å‰åŒ…å«çš„åŠŸèƒ½æœ‰ï¼š
 
-ÄÄĞ©ĞèÇó£¬Test caseµÄ¸²¸ÇÂÊºÍ×Ô¶¯»¯ÂÊ¡£
+Feature List:
+
+- New Test Suite
+- Export Current Test Suite
+- New Requirement Collection
+- Export Current Requirement collection
+- Analyze All Test Suites;
+- Analyze All Requirements;
