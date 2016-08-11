@@ -1,6 +1,9 @@
-import xlrd, json
+import json, xlrd
+from xlutils.copy import copy
 
 default_host = 'http://localhost:9527'
+
+test_cases_file = 'testcases.xls'
 
 class TestCase():
 
@@ -19,15 +22,51 @@ class TestCase():
         return "ID:%-15s TITLE:%-55s REQUEST_PATH:%-20s METHOD:%-10s RESULT:%-15s" % (self.id, self.title, self.request_path, self.method, self.result)
 
 def retrieve_test_cases():
-    wb = xlrd.open_workbook('testcases.xlsx')
+    wb = xlrd.open_workbook(test_cases_file)
     sh = wb.sheet_by_index(0)
     result = []
-    for rownum in range(1,sh.nrows):
+    for rownum in range(1, sh.nrows):
         row_data = sh.row_values(rownum)
         result.append(TestCase(row_data[0], row_data[1], row_data[2], row_data[3],
                                row_data[4], row_data[5]))
     #Return TC list
     return result
+
+def log_test_result(tc_list):
+    import xlwt
+    
+    wb = copy(xlrd.open_workbook(test_cases_file, formatting_info=True))
+    ws=wb.get_sheet(0)
+    test_result_col = 6
+    actual_result_col = 7
+    row = 1
+
+    #Pre-defined styles
+    
+    #Font
+    font = xlwt.Font()
+    font.bold = True
+
+    #Borders
+    borders = xlwt.Borders()
+    borders.left = xlwt.Borders.THIN
+    borders.right = xlwt.Borders.THIN
+    borders.top = xlwt.Borders.THIN
+    borders.bottom = xlwt.Borders.THIN
+    
+    result_style = xlwt.XFStyle()
+    result_style.font = font
+    result_style.borders = borders
+
+    actual_result_style = xlwt.XFStyle()
+    actual_result_style.borders = borders
+
+    for tc in tc_list:
+        ws.write(row, test_result_col, tc.result, result_style)         
+        ws.write(row, actual_result_col, tc.actual_result, actual_result_style)
+        row+=1
+       
+    wb.save('test_result.xls')
 
 def run_test(test_case_inst):
     import requests
@@ -87,6 +126,9 @@ def main():
     print 'Executing test cases.\n'
     for TC in tc_list:
         run_test(TC)
+    print '\nWriting test result to xls file...\n'
+    log_test_result(tc_list)
+    print '\nDone. Please check the test report for detail'
 
 if __name__=='__main__':
     main()
