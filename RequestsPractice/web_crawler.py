@@ -1,7 +1,6 @@
 # -*- coding:utf-8 -*-
 
 import requests, os, os.path, re
-from bs4 import BeautifulSoup
 
 default_path = 'D:\\temp\\'
 
@@ -33,11 +32,9 @@ def get_movie_list(url):
         if r.status_code != 200:
             print 'Oppos... Something bad happens, pls check your url: %s' % url
             return
-        html_soup = BeautifulSoup(r.content, 'html.parser')
-        for tag in html_soup.find_all('a'):
-            href_url = tag.get('href')
-            if href_url.startswith('https://movie.douban.com/subject/') and href_url not in movie_items:
-                movie_items.append(href_url)
+        for movie_url in re.findall('https://movie.douban.com/subject/\d+/', r.content):
+            if movie_url not in movie_items:
+                movie_items.append(movie_url)
         return movie_items
     except Exception, ex:
         print ex
@@ -50,19 +47,14 @@ def dl_movie_posters(url):
         if r.status_code != 200:
             print 'Error in accessing the URL %s with status code %d' % (movie_posters_url, r.status_code)
             return
-        html_soup = BeautifulSoup(r.content, 'html.parser')
-        print 'The movie title is : %s' % html_soup.title.string
         # Create a new folder for movie posters
         posters_path = os.path.join(default_path, re.findall('\d+', url)[0])
         if not os.path.exists(posters_path):
             os.mkdir(posters_path)
         # Iterate all img tags
-        for img_tag in html_soup.find_all('img'):
-            # If the src attribute of image starts with https://img3.doubanio.com/view/photo/thumb/, then replace "thumb" with "photo" and download
-            if img_tag.get('src').startswith('https://img3.doubanio.com/view/photo/thumb/'):
-                poster_url = img_tag.get('src').replace('thumb', 'photo')
-                # Save image to posters path
-                save_image(poster_url, posters_path)
+        for poster_url in re.findall('https://img3.doubanio.com/view/photo/thumb/.*\.jpg', r.content):
+            # Save image to posters path
+            save_image(poster_url.replace('thumb', 'photo'), posters_path)
     except Exception, ex:
         print ex
 
